@@ -29,10 +29,10 @@ end
 GRAPHICS-WINDOW
 254
 10
-693
-470
-16
-16
+691
+448
+-1
+-1
 13.0
 1
 10
@@ -54,10 +54,10 @@ ticks
 30.0
 
 BUTTON
-6
-76
-69
-109
+10
+170
+73
+203
 NIL
 test
 NIL
@@ -71,15 +71,32 @@ NIL
 1
 
 INPUTBOX
-5
-10
-221
-70
+9
+104
+245
+164
 path
 extensions/r/examples/rfunction1.r
 1
 0
 String
+
+BUTTON
+10
+46
+246
+100
+choose path to rfunction1.r in R extension
+set path user-file
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -399,9 +416,8 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
-
 @#$#@#$#@
-NetLogo 5.0beta3
+NetLogo 6.0-BETA2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -417,7 +433,6 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
-
 @#$#@#$#@
 0
 @#$#@#$#@
