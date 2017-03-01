@@ -204,10 +204,11 @@ The following keys are used to configure the extension:
 
 * `r.home`: Controls which installation of r is used.
 * `jri.home.paths`: Controls the path to the jri subdirectory of the rJava library.
+* `r.lib.paths`: Controls additional library path(s) with which to initialize R.
 
 Note that you will have to exit NetLogo and restart to see configuration changes take effect,
 as the configuration file is only loaded once per NetLogo instance.
-See below on how to determine the appropriate values to for `r.home` and `jri.home.paths`.
+See below on how to determine the appropriate values for each of these settings.
 
 #### Configuring the Windows PATH
 
@@ -236,7 +237,7 @@ Alternatively, if you have a full-featured text editor (like Notepad++, Vim, or 
 To reiterate a warning given in the "user.properties" file, the directory separator for Windows
 must be entered in user.properties as double-backslash ("\\") or single-forward-slash ("/").
 
-### Determining `r.home` and `jri.home.paths`
+### Determining `r.home`, `jri.home.paths`, `r.lib.paths`
 
 `r.home` is the path to the "R" installation directory which contains the "bin" directory.
 If you're having trouble finding this, you can run `R.home(component = "home")` in R, or
@@ -258,13 +259,26 @@ system.file("jri", package = "rJava")
 # Will return other results on other platforms or configurations
 ```
 
-Take the path and edit the user.properties file, uncommenting and editing one set of `r.home` and `jri.home.paths` to match
+`r.lib.paths` is a list of directories that will be set as the r `libPath`.
+Note that the system library (part of the R installation) is automatically included in the library Path.
+You can find the directories to include by running the following in R:
+
+```r
+.libPaths()
+# Returns:
+# [1] "C:/Users/username/Documents/R/win-library/3.3"
+# [2] "C:/Program Files/R/R-3.3.2/library"
+```
+
+Take the path and edit the user.properties file, uncommenting and editing
+one set of `r.home`, `jri.home.paths`, and `r.lib.paths` to match
 the values obtained in R.
 When you're done, the user.properties file should have the following lines (given the above results):
 
 ```text
 r.home=C:/PROGRA~1/R/R-33~1.2/bin/x64
 jri.home.paths=C:/Users/username/Documents/R/win-library/3.3/rJava/jri
+r.lib.paths=C:/Users/username/Documents/R/win-library/3.3
 ```
 
 Save user.properties and load a model using the R extension. You should see it start and run properly.
@@ -342,7 +356,7 @@ It evaluates the submitted R command. The R command shouldn't return a value.
 
 ```NetLogo
 ;; creates a new vector in R with a sequence from 1 to 10
-r:eval "x &lt;- seq(1,10)"
+r:eval "x <- seq(1,10)"
 show r:get "x"
 ```
 
@@ -370,7 +384,7 @@ This primitive is experimental.
 
 ```NetLogo
 ;; creates a new vector in R with a sequence from 1 to 10
-r:__evaldirect "x &lt;- seq(1,10)"
+r:__evaldirect "x <- seq(1,10)"
 show r:get "x"
 ```
 
@@ -389,7 +403,7 @@ Call this primitive after removing an R variable to free the memory.
 
 ```NetLogo
 ;; create a variable
-r:eval "x &lt;- 1:10"
+r:eval "x <- 1:10"
 ;; remove the variable
 r:eval "rm(x)"
 ;; call the garbage collector
