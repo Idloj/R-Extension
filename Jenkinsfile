@@ -7,9 +7,6 @@ node {
   checkout scm
 
   stage('Build and Test') {
-    environment {
-      R_HOME = '/usr/share/R'
-    }
     sh "${SBT} compile"
     sh "${SBT} test"
   }
