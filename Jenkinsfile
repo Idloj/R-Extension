@@ -1,14 +1,22 @@
-node {
+#!/usr/bin/env groovy
 
-  step([$class: 'GitHubSetCommitStatusBuilder'])
+pipeline {
 
-  def SBT = "${tool name: 'sbt-0.13.13', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt"
+  agent any
 
-  checkout scm
+  stages {
 
-  stage('Build and Test') {
-    sh "${SBT} compile"
-    sh "${SBT} test"
+    stage('Build and Test') {
+      steps {
+        step([$class: 'GitHubSetCommitStatusBuilder'])
+        checkout scm
+        script {
+          def SBT = "${tool name: 'sbt-0.13.13', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -Dsbt.log.noformat=true"
+          sh "${SBT} compile"
+          sh "${SBT} test"
+        }
+      }
+    }
   }
 
   post {
@@ -19,9 +27,9 @@ node {
           statusResultSource: [
               $class: 'ConditionalStatusResultSource',
               results: [
-                  [$class: 'BetterThanOrEqualBuildResult', result: 'SUCCESS', state: 'SUCCESS', message: currentBuild.description],
-                  [$class: 'BetterThanOrEqualBuildResult', result: 'FAILURE', state: 'FAILURE', message: currentBuild.description],
-                  [$class: 'AnyBuildResult', state: 'FAILURE', message: 'Build status not sucess or failure!']
+                  [$class: 'BetterThanOrEqualBuildResult', result: 'SUCCESS', state: 'SUCCESS', message: 'Build succeeded'],
+                  [$class: 'BetterThanOrEqualBuildResult', result: 'FAILURE', state: 'FAILURE', message: 'Build failed'],
+                  [$class: 'AnyBuildResult', state: 'FAILURE', message: 'Build errored!']
               ]
           ]
       ])
