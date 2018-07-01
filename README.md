@@ -123,14 +123,14 @@ see the notes at the top of the output text area after opening the shell.
 Type `help(environment)` in an R shell to learn more about environments.
 
 You can/should clear (i.e. remove all variable and free memory) the local environment via
-`[r:clearLocal](#rclearLocal)`. If you want to clear also the global environment (the whole workspace), call
-`[r:clear](#rclear)`.
+[`r:clearLocal`](#rclearLocal). If you want to clear also the global environment (the whole workspace), call
+[`r:clear`](#rclear).
 
 #### Memory
 
 With the R-Extension you can load R into the process of NetLogo. Because of the architecture of R, both software share one system process and therefore the memory given to NetLogo.
 
-In some circumstances it can happen that you receive an out of memory error due to Java's heap space. You can increase the heap space before starting NetLogo by adapting the `-Xmx` JVM-parameter (see also [the NetLogo manual section on Windows memory](http://ccl.northwestern.edu/netlogo/docs/faq.html#windowsmemory)). But on 32-bit systems, this is very limited. Therefore, it is a good idea to use a 64-bit system if you want/need to use high amount of RAM.
+In some circumstances it can happen that you receive an out of memory error due to Java's heap space. You can increase the heap space before starting NetLogo by adapting the `-Xmx` JVM-parameter (see also [the NetLogo manual section on Windows memory](http://ccl.northwestern.edu/netlogo/docs/faq.html#when-i-try-to-start-netlogo-on-windows-i-get-an-error-the-jvm-could-not-be-started-help)). But on 32-bit systems, this is very limited. Therefore, it is a good idea to use a 64-bit system if you want/need to use high amount of RAM.
 You can see the memory usage of R by starting the interactive shell (`r:interactiveShell`) and type there:
 `memory.size(max=F)` and `memory.size(max=T)`. Furthermore, you can check the memory limit by typing: `memory.limit()`.<br />
 See also:
@@ -153,14 +153,14 @@ One last note to this topic: Keep in mind that R is a vector-oriented language. 
 #### Headless
 
 Since R-Extension version 1.1 it is possible use the extension when NetLogo is running in headless mode.
-This is for example the case, when you run BehaviorSpace experiments from the command line (see [here](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html#advanced)).
+This is for example the case, when you run BehaviorSpace experiments from the command line (see [here](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html#advanced-usage)).
 The difference is, that the `interactiveShell` is not initialized/instanciated.
 You can use the extension as you know it from GUI mode, but it is not possible to open the interactiveShell ([`r:interactiveShell`](#rinteractiveshell)) and to set the plot device ([`r:setPlotDevice`](#rsetplotdevice)).
 But one additional things has to be done: You have to call [`r:stop`](#rstop) finally when running NetLogo headless to stop the R engine. Otherwise NetLogo will not be closed and you will not get back to the command line prompt.
 When setting up a BehaviorSpace experiment, there is the option to set final commands.
 This is a good place to add the `r:stop` command (see image).
 
-![r-stop-behaviorspace](https://github.com/NetLogo/R-Extension/raw/wip-bundle-with-netlogo/doc/images/rstop.jpg "Put r:stop in the behaviorspace final commands")
+![Put r:stop in the behaviorspace final commands](images/rstop.jpg)
 
 
 ## Installing
@@ -170,9 +170,9 @@ The R Extension is bundled with NetLogo 6. To use it, you will need a compatible
 ### Installing R
 
 Standard R 3 installations should work (sometimes without configuration).
-As of NetLogo 6, the following operating system / R versions were tested:
+As of NetLogo 6.0.2, the following operating system / R versions were tested:
 
-* Mac OS X, R 3.3.2
+* Mac OS X, R 3.3.3
 * Windows 10, R 3.3.2
 * Ubuntu 14.04 (64-bit), R 3.0.2
 
@@ -209,33 +209,6 @@ Note that you will have to exit NetLogo and restart to see configuration changes
 as the configuration file is only loaded once per NetLogo instance.
 See below on how to determine the appropriate values to for `r.home` and `jri.home.paths`.
 
-#### Configuring the Windows PATH
-
-Windows requires an additional configuration step to make the R extension fully functional.
-The appropriate directory from your R installation needs to be added to your PATH.
-To do this, determine where your R installation is located (here we'll use the location C:\Program Files\R\R-<version>), then follow these steps.
-
-1. Open the System Properties dialog. You can type "Environment Variable" into Cortana or navigate there through "Control Panel" > System > "Advanced system settings".
-2. Click the "Environment variables..." button in the lower right of the dialog.
-3. Click the "Path" variable in the lower panel, then click the lower "Edit..." button.
-4. Windows 10 allows you to choose "New" and enter a separate path. If you're using Windows 7, append the value, using a semicolon to separate it from the entry before.
-  * If you're using 32-bit NetLogo, enter the location `C:\Program Files\R\R-<version>\bin\i386\`
-  * If you're using 64-bit NetLogo, enter the location `C:\Program Files\R\R-<version>\bin\x64\`
-5. Choose OK, and OK again
-6. Log out of your user and back in or restart Windows to let the setting take affect.
-
-Note that you will need to update this setting if you wish to upgrade the version of R used by NetLogo.
-
-#### Notes on editing "user.properties" on Windows
-
-"user.properties" is a newline-delimited file.
-This means if it is opened in "Notepad" it will look like all the text is on a single line.
-For this reason, it is recommended to open first in "WordPad" and resave before editing in Notepad.
-Alternatively, if you have a full-featured text editor (like Notepad++, Vim, or Emacs) installed, you can use that to edit the file.
-
-To reiterate a warning given in the "user.properties" file, the directory separator for Windows
-must be entered in user.properties as double-backslash ("\\") or single-forward-slash ("/").
-
 ### Determining `r.home` and `jri.home.paths`
 
 `r.home` is the path to the "R" installation directory which contains the "bin" directory.
@@ -269,6 +242,37 @@ jri.home.paths=C:/Users/username/Documents/R/win-library/3.3/rJava/jri
 
 Save user.properties and load a model using the R extension. You should see it start and run properly.
 
+### Windows-Specific Installation Steps
+
+Windows requires the additional configuration step of configuring the PATH environment variable.
+Additionally, editing the user.properties file on Windows is slightly more difficult than on other platforms.
+
+#### Configuring the PATH
+
+To begin, determine the appropriate directory from your R installation to add to your PATH.
+To do this, determine where your R installation is located (here we'll use the location C:\Program Files\R\R-<version>), then follow these steps.
+
+1. Open the System Properties dialog. You can type "Environment Variable" into Cortana or navigate there through "Control Panel" > System > "Advanced system settings".
+2. Click the "Environment variables..." button in the lower right of the dialog.
+3. Click the "Path" variable in the lower panel, then click the lower "Edit..." button.
+4. Windows 10 allows you to choose "New" and enter a separate path. If you're using Windows 7, append the value, using a semicolon to separate it from the entry before.
+  * If you're using 32-bit NetLogo, enter the location `C:\Program Files\R\R-<version>\bin\i386\`
+  * If you're using 64-bit NetLogo, enter the location `C:\Program Files\R\R-<version>\bin\x64\`
+5. Choose OK, and OK again
+6. Log out of your user and back in or restart Windows to let the setting take affect.
+
+Note that you will need to update this setting if you wish to upgrade the version of R used by NetLogo.
+
+#### Notes on editing "user.properties" on Windows
+
+"user.properties" is a newline-delimited file.
+This means if it is opened in "Notepad" it will look like all the text is on a single line.
+For this reason, it is recommended to open first in "WordPad" and resave before editing in Notepad.
+Alternatively, if you have a full-featured text editor (like Notepad++, Vim, or Emacs) installed, you can use that to edit the file.
+
+To reiterate a warning given in the "user.properties" file, the directory separator for Windows
+must be entered in user.properties as double-backslash ("\\") or single-forward-slash ("/").
+
 ## Primitives
 
 [`r:clear`](#rclear)
@@ -299,7 +303,7 @@ Usage:
 Clears the R-Workspace. All variables in R will be deleted. It evaluates the R command
 `rm(list=ls())` and `rm(list=ls(nl.env))`.
 This deletes variables created in global as well as local environment
-(see [R Environments](#r-environments) for details about environments).
+(see [R Environments](#environments-in-the-r-extension) for details about environments).
 It's always a good idea to add this command to your setup procedure under your "clear-all" call.
 
 ```NetLogo
@@ -320,7 +324,7 @@ Usage:
 It clears the local R environment, which is used by the extension. All variables which have
 been created in the local environment will be deleted. It evaluates the R command
 `rm(list=ls(nl.env))`.
-See [R Environments](#r-environments) for details about environments.
+See [R Environments](#environments-in-the-r-extension) for details about environments.
 See [`r:clear`](#rclear) for deleting all variables, i.e. the globals as well.
 
 ```NetLogo
@@ -342,7 +346,7 @@ It evaluates the submitted R command. The R command shouldn't return a value.
 
 ```NetLogo
 ;; creates a new vector in R with a sequence from 1 to 10
-r:eval "x &lt;- seq(1,10)"
+r:eval "x <- seq(1,10)"
 show r:get "x"
 ```
 
@@ -370,7 +374,7 @@ This primitive is experimental.
 
 ```NetLogo
 ;; creates a new vector in R with a sequence from 1 to 10
-r:__evaldirect "x &lt;- seq(1,10)"
+r:__evaldirect "x <- seq(1,10)"
 show r:get "x"
 ```
 
@@ -389,7 +393,7 @@ Call this primitive after removing an R variable to free the memory.
 
 ```NetLogo
 ;; create a variable
-r:eval "x &lt;- 1:10"
+r:eval "x <- 1:10"
 ;; remove the variable
 r:eval "rm(x)"
 ;; call the garbage collector
@@ -450,7 +454,7 @@ variable. With a call of [`r:clear`](#rclear) you can restore it but this will
 empty your workspace). You can use this to have access to variables which you have created
 from NetLogo by `get("<variable name>",nl.env)`. To copy for example an variable
 with the name `var1` from the local environment to the global environment, type `var <-
-get("var",nl.env)`. See section [R Environments](#r-environments) for details.
+get("var",nl.env)`. See section [R Environments](#environments-in-the-r-extension) for details.
 If you just want to see the contents of a variable which lives in the local environment, you
 could submit your command, for example in the NetLogo Command Center, and the result will
 be shown in the output area of the Interactive Shell. For example:
@@ -696,14 +700,14 @@ Please use absolute path to any files in R instead of changing the working direc
 
 ### Specific error code list
 
-* Error #01. Invalid R Home. R home is specified via the R_HOME environment variable or a properties file, but couldn't be found at the specified path. See above for how to specify R home.
+* Error #01. Invalid R Home. R home is specified via the `R_HOME` environment variable or a properties file, but couldn't be found at the specified path. See above for how to specify R home.
 * Error #02: Cannot find rJava/JRI. The R Extension was unable to locate your installation of rJava. Some steps to resolve:
   * Ensure that rJava (0.9-8 or later) is installed in R. Ensure that it's installed either system-wide or for you as a user
   * Ensure that your configuration points to the proper rJava location. If you have a `user.properties` file, ensure that `jri.home.paths` includes the path given by R when you run `system.file("jri",package="rJava")`
 * Error #03: Cannot load rJava libraries. This may indicate a corrupted rJava installation. Try reinstalling rJava.
 * Error #04: Error in R-Extension. This is an unknown initialization error. Ensure that you are running R 3.0.0 or later and have the rJava extension installed (version 0.9-8 or later). Please report this error to bugs@ccl.northwestern.edu or open a new issue on [the R-Extension issue tracker](https://github.com/NetLogo/R-Extension/issues).
-* Error #05: There was an error setting R_HOME. Check your user.properties file to ensure that r.home specifies a valid path to the R extension. You may also be able to work around this error by setting the R_HOME environment variable. If this error persists, please report it!
-* Error #06: Cannot load R libraries. This may indicate a corrupted or improperly configured R installation. If you're certain that your R installation is find, please report this as an issue.
+* Error #05: There was an error setting `R_HOME`. Check your user.properties file to ensure that r.home specifies a valid path to the R extension. You may also be able to work around this error by setting the `R_HOME` environment variable. If this error persists, please report it!
+* Error #06: Cannot load R libraries. This may indicate a corrupted or improperly configured R installation. If you're certain that your R installation is fine, please report this as an issue.
 
 
 ## Citation
